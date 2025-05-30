@@ -9,7 +9,9 @@
       font-family: Arial, sans-serif;
       padding: 40px;
       text-align: center;
+      display: none; /* Prevent flash of dashboard */
     }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -25,33 +27,39 @@
   <p>You are successfully logged in!</p>
   <button onclick="logout()">Logout</button>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-
-  <script>
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
+      apiKey: "AIzaSyBH3D0bBjzYV6KqAtUxJPvhPzVviW3JkQY",
       authDomain: "gao-investor-login.firebaseapp.com",
       projectId: "gao-investor-login",
-      // ...rest of config
+      storageBucket: "gao-investor-login.firebasestorage.app",
+      messagingSenderId: "1025326311789",
+      appId: "1:1025326311789:web:539a2a9523609377c51264"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    // Redirect to login if not signed in
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
+    // 🔐 Auth Check
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is logged in:", user.email);
+        document.body.style.display = "block";
+      } else {
+        console.warn("No user. Redirecting...");
         window.location.href = "index.html";
       }
     });
 
-    function logout() {
-      auth.signOut().then(() => {
+    // 🚪 Logout
+    window.logout = function() {
+      signOut(auth).then(() => {
         window.location.href = "index.html";
       });
-    }
+    };
   </script>
 </body>
 </html>

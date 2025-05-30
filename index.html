@@ -58,12 +58,12 @@
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
+      apiKey: "AIzaSyBH3D0bBjzYV6KqAtUxJPvhPzVviW3JkQY",
       authDomain: "gao-investor-login.firebaseapp.com",
       projectId: "gao-investor-login",
-      storageBucket: "gao-investor-login.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      storageBucket: "gao-investor-login.firebasestorage.app",
+      messagingSenderId: "1025326311789",
+      appId: "1:1025326311789:web:539a2a9523609377c51264"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -75,7 +75,8 @@
       const message = document.getElementById('message');
 
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
+        .then((userCredential) => {
+          console.log("Login successful for:", userCredential.user.email);
           window.location.href = "dashboard.html";
         })
         .catch((error) => {
@@ -84,4 +85,4 @@
     };
   </script>
 </body>
-</html>
+</html> 
