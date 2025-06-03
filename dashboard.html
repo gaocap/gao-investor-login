@@ -2,35 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Investor Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GAO Capital | Investor Dashboard</title>
+
+  <!-- Font + Basic Styling -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Noto Serif SC', serif;
+      background-color: #fff;
+      color: #111;
+    }
+
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      font-size: 24px;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .container {
       padding: 40px;
-      text-align: center;
-      display: none; /* Prevent flash of dashboard */
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-top: 40px;
+      color: #990000;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    a {
+      color: #990000;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    iframe {
+      margin-top: 20px;
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     button {
-      margin-top: 20px;
+      margin-top: 40px;
       padding: 10px 20px;
-      background-color: #dc3545;
+      background-color: #990000;
       color: white;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #770000;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to the GAO Capital Investor Dashboard</h1>
-  <p>You are successfully logged in!</p>
-  <button onclick="logout()">Logout</button>
+  <header>
+    <h1>GAO Capital</h1>
+    <button onclick="logout()">Logout</button>
+  </header>
+
+  <div class="container">
+    <h2>Welcome to the Investor Dashboard</h2>
+    <p>You are successfully logged in.</p>
+
+    <h2>📄 Fund Factsheets</h2>
+    <ul>
+      <li>
+        <a href="docs/ASV_Factsheet_Dec2023.pdf" target="_blank">
+          🔗 View ASV Factsheet – Dec 2023
+        </a>
+      </li>
+    </ul>
+
+    <iframe src="docs/ASV_Factsheet_Dec2023.pdf"></iframe>
+  </div>
 
   <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBH3D0bBjzYV6KqAtUxJPvhPzVviW3JkQY",
       authDomain: "gao-investor-login.firebaseapp.com",
@@ -43,19 +118,13 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🔐 Auth Check
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is logged in:", user.email);
-        document.body.style.display = "block";
-      } else {
-        console.warn("No user. Redirecting...");
+      if (!user) {
         window.location.href = "index.html";
       }
     });
 
-    // 🚪 Logout
-    window.logout = function() {
+    window.logout = function () {
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
