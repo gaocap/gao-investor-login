@@ -92,35 +92,47 @@
     <h2>📄 Fund Factsheets</h2>
     <ul>
       <li>
-        <a href="docs/ASV_Factsheet_Dec2023.pdf" target="_blank">
-          🔗 View ASV Factsheet – Dec 2023
+        <a id="factsheet-link" href="#" target="_blank">
+          🔗 View Annapurna Factsheet – March 2025
         </a>
       </li>
     </ul>
-
-    <iframe src="docs/ASV_Factsheet_Dec2023.pdf"></iframe>
+    <iframe id="factsheet-frame" src=""></iframe>
   </div>
 
   <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBH3D0bBjzYV6KqAtUxJPvhPzVviW3JkQY",
       authDomain: "gao-investor-login.firebaseapp.com",
       projectId: "gao-investor-login",
-      storageBucket: "gao-investor-login.firebasestorage.app",
+      storageBucket: "gao-investor-login.appspot.com",
       messagingSenderId: "1025326311789",
       appId: "1:1025326311789:web:539a2a9523609377c51264"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const storage = getStorage(app);
 
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "index.html";
+      } else {
+        const factsheetRef = ref(storage, "factsheets/Annapurna_March_2025_Factsheet.pdf");
+
+        getDownloadURL(factsheetRef)
+          .then((url) => {
+            document.getElementById("factsheet-link").href = url;
+            document.getElementById("factsheet-frame").src = url;
+          })
+          .catch((error) => {
+            console.error("Could not load factsheet:", error);
+          });
       }
     });
 
