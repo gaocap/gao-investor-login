@@ -94,16 +94,21 @@
     <h2>Welcome to the Investor Dashboard</h2>
     <p>You are successfully logged in.</p>
 
-    <h2>📄 Fund Factsheets</h2>
+    <h2>📄 Annapurna Fund – Monthly Factsheets</h2>
     <ul>
-      <li>
-        <a id="factsheet-link" href="#" target="_blank">
-          🔗 View Annapurna Factsheet – March 2025
-        </a>
-      </li>
+      <li><a id="annapurna-may-link" target="_blank">🔗 May 2025 Factsheet</a></li>
+      <li><a id="annapurna-apr-link" target="_blank">🔗 April 2025 Factsheet</a></li>
+      <li><a id="annapurna-mar-link" target="_blank">🔗 March 2025 Factsheet</a></li>
     </ul>
-    <iframe id="factsheet-frame" src=""></iframe>
-    <p class="error" id="error-msg"></p>
+
+    <iframe
+      id="annapurna-preview"
+      width="100%"
+      height="600px"
+      style="border: 1px solid #ccc; border-radius: 6px; margin-top: 20px;">
+    </iframe>
+
+    <p id="error-msg" class="error"></p>
   </div>
 
   <!-- Firebase Modular SDK -->
@@ -126,24 +131,47 @@
     const auth = getAuth(app);
     const storage = getStorage(app, "gs://gao-investor-login.firebasestorage.app");
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "index.html";  // redirect to login if not logged in
-      } else {
-        // Path from your Firebase console screenshot
-        const factsheetRef = ref(storage, "factsheets/Annapurna_March_2025_Factsheet.pdf");
-
-        getDownloadURL(factsheetRef)
-          .then((url) => {
-            document.getElementById("factsheet-link").href = url;
-            document.getElementById("factsheet-frame").src = url;
-          })
-          .catch((error) => {
-            console.error("Could not load factsheet:", error);
-            document.getElementById("error-msg").innerText = "⚠️ Error loading factsheet. Please try again later.";
-          });
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html"; // Redirect if not logged in
+  } else {
+    const files = [
+      {
+        id: "annapurna-may",
+        path: "factsheets/Annapurna_May_2025_Factsheet.pdf"
+      },
+      {
+        id: "annapurna-apr",
+        path: "factsheets/Annapurna_April_2025_Factsheet.pdf"
+      },
+      {
+        id: "annapurna-mar",
+        path: "factsheets/Annapurna_March_2025_Factsheet.pdf"
       }
+    ];
+
+    files.forEach(({ id, path }) => {
+      const fileRef = ref(storage, path);
+      getDownloadURL(fileRef)
+        .then((url) => {
+          const linkElement = document.getElementById(`${id}-link`);
+          if (linkElement) linkElement.href = url;
+
+          if (id === "annapurna-may") {
+            const preview = document.getElementById("annapurna-preview");
+            if (preview) preview.src = url;
+          }
+        })
+        .catch((error) => {
+          console.error(`Could not load ${id} factsheet:`, error);
+          const errorBox = document.getElementById("error-msg");
+          if (errorBox) {
+            errorBox.innerText = "⚠️ Error loading factsheets. Please try again later.";
+          }
+        });
     });
+  }
+});
 
     // Logout function
     window.logout = function () {
