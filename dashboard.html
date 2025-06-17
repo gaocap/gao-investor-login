@@ -100,15 +100,6 @@
       <li><a id="annapurna-apr-link" target="_blank">🔗 April 2025 Factsheet</a></li>
       <li><a id="annapurna-mar-link" target="_blank">🔗 March 2025 Factsheet</a></li>
     </ul>
-
-    <iframe
-      id="annapurna-preview"
-      width="100%"
-      height="600px"
-      style="border: 1px solid #ccc; border-radius: 6px; margin-top: 20px;">
-    </iframe>
-
-    <p id="error-msg" class="error"></p>
   </div>
 
   <!-- Firebase Modular SDK -->
@@ -156,18 +147,9 @@ onAuthStateChanged(auth, (user) => {
         .then((url) => {
           const linkElement = document.getElementById(`${id}-link`);
           if (linkElement) linkElement.href = url;
-
-          if (id === "annapurna-may") {
-            const preview = document.getElementById("annapurna-preview");
-            if (preview) preview.src = url;
-          }
         })
         .catch((error) => {
           console.error(`Could not load ${id} factsheet:`, error);
-          const errorBox = document.getElementById("error-msg");
-          if (errorBox) {
-            errorBox.innerText = "⚠️ Error loading factsheets. Please try again later.";
-          }
         });
     });
   }
