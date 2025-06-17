@@ -100,6 +100,14 @@
       <li><a id="annapurna-apr-link" target="_blank">🔗 April 2025 Factsheet</a></li>
       <li><a id="annapurna-mar-link" target="_blank">🔗 March 2025 Factsheet</a></li>
     </ul>
+
+    <h2>📄 ASV Fund – Monthly Factsheets</h2>
+    <ul>
+      <li><a id="asv-may-link" target="_blank">🔗 May 2025 Factsheet</a></li>
+      <li><a id="asv-apr-link" target="_blank">🔗 April 2025 Factsheet</a></li>
+      <li><a id="asv-mar-link" target="_blank">🔗 March 2025 Factsheet</a></li>
+    </ul>
+    
   </div>
 
   <!-- Firebase Modular SDK -->
@@ -140,6 +148,34 @@ onAuthStateChanged(auth, (user) => {
         path: "factsheets/Annapurna_March_2025_Factsheet.pdf"
       }
     ];
+
+    const asvFiles = [
+      {
+        id: "asv-may",
+        path: "factsheets/ASV_May_2025_Factsheet.pdf"
+      },
+      {
+        id: "asv-apr",
+        path: "factsheets/ASV_April_2025_Factsheet.pdf"
+      },
+      {
+        id: "asv-mar",
+        path: "factsheets/ASV_March_2025_Factsheet.pdf"
+      }
+    ];
+
+    asvFiles.forEach(({ id, path }) => {
+      const fileRef = ref(storage, path);
+      getDownloadURL(fileRef)
+        .then((url) => {
+          const linkElement = document.getElementById(`${id}-link`);
+          if (linkElement) linkElement.href = url;
+        })
+        .catch((error) => {
+          console.error(`Could not load ${id} factsheet:`, error);
+        });
+    });
+
 
     files.forEach(({ id, path }) => {
       const fileRef = ref(storage, path);
